@@ -175,3 +175,4 @@ dist/
 .vscode/
 node_modules
 _test_/asset/
+test-upload.sh
