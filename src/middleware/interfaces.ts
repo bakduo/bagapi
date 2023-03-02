@@ -9,6 +9,6 @@ export interface CPayloadFile {
     }
 }
 export interface CustomRequestPayload extends Request {
-    payload?: any,
+    payload?: unknown,
     count?: number
 }

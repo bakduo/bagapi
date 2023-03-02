@@ -6,6 +6,8 @@ import { Writable } from 'stream';
 
 const writeFile = util.promisify(fs.writeFile);
 
+type dataChunk = unknown | string | NodeJS.ArrayBufferView
+
 
 export class WritableFileStream extends Writable {
     path: string;
@@ -15,8 +17,9 @@ export class WritableFileStream extends Writable {
         this.path = path;
     }
     
-    _write(chunk: any, encoding: string, next: (error?: Error) => void) {
-        writeFile(this.path, chunk)
+    _write(chunk: unknown, encoding: string, next: (error?: Error) => void) {
+        const data = (chunk as string | NodeJS.ArrayBufferView);
+        writeFile(this.path, data)
         .then(() => next())
         .catch((error) => next(error));
     }
