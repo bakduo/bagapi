@@ -1,7 +1,8 @@
 import express from 'express';
 
-import {Request, Response, NextFunction} from 'express';
+import {Request, Response} from 'express';
 import { routerStorageApi } from './routes';
+import { setCache } from './middleware';
 
 export const app = express();
 
@@ -10,6 +11,8 @@ app.disable('x-powered-by');
 app.use(express.json({limit: '10MB'}));
 
 app.use(express.urlencoded({ limit: '10MB',extended: true }));
+
+app.use(setCache);
 
 app.use('/api',routerStorageApi);
 
