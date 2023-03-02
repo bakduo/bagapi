@@ -6,9 +6,6 @@ import { Writable } from 'stream';
 
 const writeFile = util.promisify(fs.writeFile);
 
-type dataChunk = unknown | string | NodeJS.ArrayBufferView
-
-
 export class WritableFileStream extends Writable {
     path: string;
     
