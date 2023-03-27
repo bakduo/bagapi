@@ -10,6 +10,7 @@ It's an API for save data.
 - [x] POO API.
 - [x] Provider controller.
 - [x] test unit.
+- [x] add support swagger OpenAPI spec.
 
 ## Installation
 
