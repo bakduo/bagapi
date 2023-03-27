@@ -7,11 +7,11 @@ import {
   HttpStatus,
   Delete,
 } from '@nestjs/common';
+import { CustomRequestPayload } from '../middleware/upload-stream.middleware';
 import { Response } from 'express';
-import { CustomRequestPayload } from './middleware/upload-stream.middleware';
 
 @Controller('itemfiles')
-export class ItemfilesController {
+export class ItemFilesController {
   @Post()
   create(@Res() res: Response, req: CustomRequestPayload) {
     return res

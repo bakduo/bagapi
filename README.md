@@ -8,7 +8,7 @@ It's an API for save data.
 - [x] Provide module for upload files.
 - [x] support middleware.
 - [x] POO API.
-- [x] Provide controller.
+- [x] Provider controller.
 - [x] test unit.
 
 ## Installation
