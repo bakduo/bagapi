@@ -1,19 +1,53 @@
-BagAPI
-====================
+#BagAPI by NestJS
+
+## Summary
+
+It's an API for save data. 
+
+- [x] Provide module for multiple database provider.
+- [x] Provide module for upload files.
+- [x] support middleware.
+- [x] POO API.
+- [x] Provide controller.
+- [x] test unit.
+
+## Installation
+
+```bash
+$ npm install
+```
+
+## Running the app
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+## Test
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
+## Support
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
 
 
-# Summary 
+## License
 
-This's an API for save resources with Streams in NodeJS. It's part of other applications for Microservices.
-
-# Tech
-- [X] NodeJS
-- [X] token.
-- [X] Mongo datastore.
-- [X] Memory datastore.
-- [X] testing.
-- [X] inject configuration.
-- [ ] connect to service.
-- [ ] message async with event.
-- [ ] logger external.
-- [ ] container.
+Nest is [MIT licensed](LICENSE).
