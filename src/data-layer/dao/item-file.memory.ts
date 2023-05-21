@@ -16,6 +16,11 @@ export class ItemFileMemory implements IGenericDB<ItemFile>{
     async findOne(custom: IsearchItem): Promise<ItemFile> {
         //throw new Error("Method not implemented.");
         const {keycustom, valuecustom} = custom;
+
+        if (keycustom=='name'){
+            const name = valuecustom as string;
+            return await this.findByName(name);
+        }
         
         if (keycustom!=='uuid'){
             throw new Error(`Find attribute didn't correct ${custom}`);
@@ -30,6 +35,20 @@ export class ItemFileMemory implements IGenericDB<ItemFile>{
             return Promise.resolve(OK);
         }
         throw new Error(`Not found ${custom.valuecustom}`);
+    }
+
+    async findByName(name:string): Promise<ItemFile> {
+        
+        const items = this.memory.getStore();
+        
+        const OK = items.find((item)=>{
+            return (item.name == name)
+        })
+        
+        if (OK){
+            return Promise.resolve(OK);
+        }
+        throw new Error(`Not found ${name}`);
     }
 
     async deleteOne(custom: IsearchItem): Promise<boolean> {
@@ -62,9 +81,10 @@ export class ItemFileMemory implements IGenericDB<ItemFile>{
             const postIndex = items.findIndex((item)=>{
                 return item.uuid==id
             })
+            item.modify = new Date();
             items[postIndex] = item;
             this.memory.replace(items);
-            return Promise.resolve(item);
+            return Promise.resolve(items[postIndex]);
         }
         throw new Error(`Not found ${id}`);
     }

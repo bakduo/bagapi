@@ -14,6 +14,12 @@ routerStorageApi.post('/save',[checkToken,checkUpload],controller.save);
 
 routerStorageApi.delete('/delete',checkToken,controller.delete);
 
-routerStorageApi.get('/find',checkToken,controller.find);
+routerStorageApi.delete('/deletelogic',checkToken,controller.deletelogic);
+
+routerStorageApi.get('/findByName/:name',checkToken,controller.find);
+
+routerStorageApi.get('/findById/:uuid',checkToken,controller.find);
+
+routerStorageApi.get('/list',checkToken,controller.getAll);
 
 routerStorageApi.put('/update',checkToken,controller.update);

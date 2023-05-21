@@ -50,9 +50,9 @@ export class ItemFileMongo implements IGenericDB<ItemFile>{
 
         const {keycustom, valuecustom} = custom;
 
-        if (keycustom!=='uuid'){
-            throw new Error(`Find attribute didn't correct ${custom}`);
-        }
+        // if (keycustom!=='uuid'){
+        //     throw new Error(`Find attribute didn't correct ${custom}`);
+        // }
 
         const queryObj:IKeyValue = {};
 
@@ -92,12 +92,11 @@ export class ItemFileMongo implements IGenericDB<ItemFile>{
         try {
 
             //FIXIT post future modif
-            const mItem = {
-                ...item
-            }
+            // const mItem = {
+            //     ...item
+            // }
 
-            const newItem:ItemFile = await this.model.create(mItem);
-
+            const newItem:ItemFile = await this.model.create(item);
             if (newItem){
                
                const {uuid,name,created,path,modify,deleted,owner,timestamp} = newItem;
@@ -118,6 +117,8 @@ export class ItemFileMongo implements IGenericDB<ItemFile>{
 
         //https://stackoverflow.com/questions/32811510/mongoose-findoneandupdate-doesnt-return-updated-document
         
+        item.modify = new Date();
+
         const updateItem = await this.model.findOneAndUpdate({uuid:id},item,{ returnOriginal: false });
             
         if (updateItem){

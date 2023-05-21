@@ -109,10 +109,10 @@ describe('Test controller UNIT',async () => {
             expect(responseUser).to.include.keys('message');
             expect(responseUser).to.include.keys('file');
             expect(responseUser.file).to.be.a('object');
-            expect(responseUser.file).to.include.keys('save');
+            expect(responseUser.file).to.include.keys('name');
             expect(responseUser.file).to.include.keys('count');
             expect(responseUser.file.count).to.equal(sizeOFile);
-            expect(responseUser.file.save).to.equal(nameFile1);
+            expect(responseUser.file.name).to.equal(nameFile1);
             console.log('### DONE ###');
         });
     });
@@ -165,10 +165,10 @@ describe('Test controller UNIT',async () => {
             expect(responseUser).to.include.keys('message');
             expect(responseUser).to.include.keys('file');
             expect(responseUser.file).to.be.a('object');
-            expect(responseUser.file).to.include.keys('save');
+            expect(responseUser.file).to.include.keys('name');
             expect(responseUser.file).to.include.keys('count');
             expect(responseUser.file.count).to.equal(sizeOFile);
-            expect(responseUser.file.save).to.equal(nameFile2);
+            expect(responseUser.file.name).to.equal(nameFile2);
             console.log('### DONE ###');
     
         });
@@ -297,10 +297,10 @@ describe('Test controller UNIT',async () => {
             expect(responseUser).to.include.keys('message');
             expect(responseUser).to.include.keys('file');
             expect(responseUser.file).to.be.a('object');
-            expect(responseUser.file).to.include.keys('save');
+            expect(responseUser.file).to.include.keys('name');
             expect(responseUser.file).to.include.keys('count');
             expect(responseUser.file.count).to.equal(sizeOFile);
-            expect(responseUser.file.save).to.equal(nameFile3);
+            expect(responseUser.file.name).to.equal(nameFile3);
             console.log('### DONE ###');
         });
 
@@ -348,16 +348,80 @@ describe('Test controller UNIT',async () => {
     // })
 
     describe('Operations delete file', () => {
+
+        it('debería eliminar un file de forma logica', async () => {
+
+            const tokenUser = faker.string.alphanumeric(100);
+            const response = await requestTest.get('/api/list').send()
+            const responseUser = response.body;
+            const item = responseUser.files[1];
+            const data = {
+                uuid:item.uuid,
+            }
+            const responseDelete = await requestTest.delete('/api/deletelogic').send(data)
+            .set('Authorization',`Bearer ${tokenUser}`)
+            expect(responseDelete.status).to.eql(201);
+            const responseDeleteBody = responseDelete.body;
+            expect(responseDeleteBody).to.be.a('object');
+            expect(responseDeleteBody).to.include.keys('message');
+            expect(responseDeleteBody).to.include.keys('file');
+            expect(responseDeleteBody.file).to.be.a('object');
+            expect(responseDeleteBody.file).to.include.keys('deleted');
+            expect(responseDeleteBody.file.deleted).to.equal(item.uuid);
+            console.log('### DONE ###');
+    
+        });
         
         it('debería eliminar un file', async () => {
 
             const tokenUser = faker.string.alphanumeric(100);
 
+            const deleteItem = faker.string.alphanumeric(100);
+
             const data = {
-                name:nameFile2,
+                uuid:deleteItem,
             }
 
             const response = await requestTest.delete('/api/delete').send(data)
+            .set('Authorization',`Bearer ${tokenUser}`)
+            expect(response.status).to.eql(404);
+            const responseUser = response.body;
+            expect(responseUser).to.be.a('object');
+            expect(responseUser).to.include.keys('message');
+            // expect(responseUser).to.include.keys('file');
+            // expect(responseUser.file).to.be.a('object');
+            // expect(responseUser.file).to.include.keys('deleted');
+            // expect(responseUser.file.deleted).to.equal(nameFile2);
+            console.log('### DONE ###');
+    
+        });
+    });
+
+    describe('Operations get all files list', () => {
+        
+        it('debería listar todos los files en la DB', async () => {
+
+            const tokenUser = faker.string.alphanumeric(100);
+            const response = await requestTest.get(`/api/list`).send()
+            .set('Authorization',`Bearer ${tokenUser}`)
+            expect(response.status).to.eql(200);
+            const responseUser = response.body;
+            expect(responseUser).to.be.a('object');
+            expect(responseUser).to.include.keys('message');
+            expect(responseUser).to.include.keys('files');
+            expect(responseUser.files).to.be.a('array');
+            console.log('### DONE ###');
+    
+        });
+
+    });
+
+    describe('Operations find file', () => {
+        
+        it('debería buscar un file by name', async () => {
+
+            const tokenUser = faker.string.alphanumeric(100);
+            const response = await requestTest.get(`/api/findByName/${nameFile1}`).send()
             .set('Authorization',`Bearer ${tokenUser}`)
             expect(response.status).to.eql(200);
             const responseUser = response.body;
@@ -365,8 +429,22 @@ describe('Test controller UNIT',async () => {
             expect(responseUser).to.include.keys('message');
             expect(responseUser).to.include.keys('file');
             expect(responseUser.file).to.be.a('object');
-            expect(responseUser.file).to.include.keys('deleted');
-            expect(responseUser.file.deleted).to.equal(nameFile2);
+            expect(responseUser.file).to.include.keys('name');
+            expect(responseUser.file.name).to.equal(nameFile1);
+            console.log('### DONE ###');
+    
+        });
+
+        it('debería buscar un file by uuid y fallar', async () => {
+
+            const uuid= faker.string.alphanumeric(100);
+            const tokenUser = faker.string.alphanumeric(100);
+            const response = await requestTest.get(`/api/findById/${uuid}`).send()
+            .set('Authorization',`Bearer ${tokenUser}`)            
+            expect(response.status).to.eql(404);
+            const responseUser = response.body;
+            expect(responseUser).to.be.a('object');
+            expect(responseUser).to.include.keys('message');
             console.log('### DONE ###');
     
         });

@@ -33,7 +33,7 @@ export const ItemFileSchema = new Schema<ItemFile>({
     },
     owner: {
         type: String,
-        required: true,
+        required: false,
         default: '',
     },  
     timestamp: {

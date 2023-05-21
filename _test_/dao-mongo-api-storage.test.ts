@@ -19,7 +19,7 @@ describe('Test DAO Mongo UNIT',async () => {
         uuid1 = faker.database.mongodbObjectId();
         uuid2 = faker.database.mongodbObjectId();
         uuid3 = faker.database.mongodbObjectId();
-        
+        await dao.deleteAll();
     });
 
     after(async function(){

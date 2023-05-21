@@ -10,7 +10,7 @@ const pathUpload = cwd + '/upload';
 
 
 const uploadFile = (req:CustomRequestPayload, filePath:string) => {
-    console.log(req.headers);
+    //console.log(req.headers);
     const nameFile = extractNameFileFromHeader(req.headers['content-disposition']||'');
     //const nameFile = form.filename.options.name;
     //let bytes = 0;
@@ -23,7 +23,7 @@ const uploadFile = (req:CustomRequestPayload, filePath:string) => {
      // With the open - event, data will start being written
      // from the request to the stream's destination path
      stream.on('open', () => {
-      console.log('Stream open ...  0.00%');
+      //console.log('Stream open ...  0.00%');
       req.pipe(stream);
      });
    
@@ -34,15 +34,15 @@ const uploadFile = (req:CustomRequestPayload, filePath:string) => {
       const total = Number(req.headers['content-length']);
       const pWritten = ((written / total) * 100).toFixed(2);
       //req.count = total;
-      console.log(`Processing  ...  ${pWritten}% done ${nameFile}`);
+      //console.log(`Processing  ...  ${pWritten}% done ${nameFile}`);
      });
    
      // When the stream is finished, print a final message
      // Also, resolve the location of the file to calling function
      stream.on('close', () => {
-      console.log(`Processing  ...  100% ${nameFile}`);
+      //console.log(`Processing  ...  100% ${nameFile}`);
       req.count = Number(req.headers['content-length']);
-      resolve({save:nameFile,type:'stream',count:req.count,path:pathUpload});
+      resolve({name:nameFile,type:'stream',count:req.count,path:pathUpload});
      });
       // If something goes wrong, reject the primise
      stream.on('error', err => {
@@ -58,7 +58,6 @@ export const checkUpload = async(req:CustomRequestPayload, res:Response, next:Ne
  
     if (req.body){
         //const {filename} = req.body;
-        console.log(req.body);
         uploadFile(req,pathUpload)
         .then((data)=>{
             req.payload=data;

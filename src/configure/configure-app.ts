@@ -135,6 +135,11 @@ export const ERRORS_APP = {
         code: 1004,
         HttpStatusCode: 500
     },
+    'ENotFoundItem':{
+        detail:'Exception on find item to store DB',
+        code: 1005,
+        HttpStatusCode: 404
+    },
     'EBase':{
         detail:'Exception generic',
         code: 1000,
