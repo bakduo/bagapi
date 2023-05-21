@@ -1,6 +1,5 @@
 import { Schema } from 'mongoose';
-
-import { ItemFile } from '../dto/item-file.dto';
+import { ItemFile } from '../dao/generic';
 
 export const ItemFileSchema = new Schema<ItemFile>({
     name: {

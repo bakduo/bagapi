@@ -66,7 +66,7 @@ describe('Test controller UNIT',async () => {
 
         it('debería generar un file con los datos del user en formato stream data text', async () => {
 
-            const tokenUser = faker.random.alphaNumeric(100);
+            const tokenUser = faker.string.alphanumeric(100);
     
             const readStream = fs.createReadStream(`${filePath}/${nameFile1}`);
     
@@ -121,7 +121,7 @@ describe('Test controller UNIT',async () => {
         
         it('debería generar un file con los datos del user en formato stream data image', async () => {
 
-            const tokenUser = faker.random.alphaNumeric(100);
+            const tokenUser = faker.string.alphanumeric(100);
     
             const readStream = fs.createReadStream(`${filePath}/${nameFile2}`);
     
@@ -160,6 +160,7 @@ describe('Test controller UNIT',async () => {
             .set('Authorization',`Bearer ${tokenUser}`)
             expect(response.status).to.eql(201);
             const responseUser = response.body;
+            console.log(responseUser.file);
             expect(responseUser).to.be.a('object');
             expect(responseUser).to.include.keys('message');
             expect(responseUser).to.include.keys('file');
@@ -177,7 +178,7 @@ describe('Test controller UNIT',async () => {
 
         it('debería generar un file con los datos del user en formato stream data', async () => {
 
-            const tokenUser = faker.random.alphaNumeric(100);
+            const tokenUser = faker.string.alphanumeric(100);
 
             const readStream = fs.createReadStream(`${filePath}/${nameFile3}`);
 
@@ -345,6 +346,31 @@ describe('Test controller UNIT',async () => {
 
     //     });
     // })
+
+    describe('Operations delete file', () => {
+        
+        it('debería eliminar un file', async () => {
+
+            const tokenUser = faker.string.alphanumeric(100);
+
+            const data = {
+                name:nameFile2,
+            }
+
+            const response = await requestTest.delete('/api/delete').send(data)
+            .set('Authorization',`Bearer ${tokenUser}`)
+            expect(response.status).to.eql(200);
+            const responseUser = response.body;
+            expect(responseUser).to.be.a('object');
+            expect(responseUser).to.include.keys('message');
+            expect(responseUser).to.include.keys('file');
+            expect(responseUser.file).to.be.a('object');
+            expect(responseUser.file).to.include.keys('deleted');
+            expect(responseUser.file.deleted).to.equal(nameFile2);
+            console.log('### DONE ###');
+    
+        });
+    });
 })
 
 

@@ -1,6 +1,7 @@
 import { app } from '../src/app';
+import {appconfig} from '../src/configure/configure-app';
 
-const puerto = 8081;
+const puerto = appconfig.port;
 
 const server = app.listen(puerto, async () => {
     console.log(`servidor escuchando en http://localhost:${puerto}`);

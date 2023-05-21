@@ -1,5 +1,4 @@
-import { ItemFile } from "../dto/item-file.dto";
-import { IGenericDB, IsearchItem } from "./generic";
+import { IGenericDB, IsearchItem, ItemFile } from "./generic";
 import { MemoryDatastore } from '../data-store/memory';
 
 export class ItemFileMemory implements IGenericDB<ItemFile>{
@@ -26,6 +25,7 @@ export class ItemFileMemory implements IGenericDB<ItemFile>{
         const OK = items.find((item)=>{
             return (item.uuid == valuecustom)
         })
+        
         if (OK){
             return Promise.resolve(OK);
         }

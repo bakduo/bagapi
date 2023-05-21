@@ -42,7 +42,7 @@ const uploadFile = (req:CustomRequestPayload, filePath:string) => {
      stream.on('close', () => {
       console.log(`Processing  ...  100% ${nameFile}`);
       req.count = Number(req.headers['content-length']);
-      resolve({save:nameFile,count:req.count});
+      resolve({save:nameFile,type:'stream',count:req.count,path:pathUpload});
      });
       // If something goes wrong, reject the primise
      stream.on('error', err => {
@@ -60,7 +60,10 @@ export const checkUpload = async(req:CustomRequestPayload, res:Response, next:Ne
         //const {filename} = req.body;
         console.log(req.body);
         uploadFile(req,pathUpload)
-        .then((data)=>{req.payload=data;return next()})
+        .then((data)=>{
+            req.payload=data;
+            return next()
+        })
         .catch((err)=>{return res.status(400).json({message:`Fail to upload streams for user ${err}`})});
     }
 }

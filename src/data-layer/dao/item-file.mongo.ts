@@ -1,10 +1,8 @@
-import { IGenericDB, IsearchItem } from "./generic";
-import { ItemFile } from '../dto/item-file.dto';
+import { IGenericDB, IsearchItem, ItemFile } from "./generic";
 import { MongoDatastore } from '../data-store/mongo';
 import { Model } from "mongoose";
 import { appconfig } from "../../configure";
 import { ItemFileSchema } from '../schemas/item-file';
-
 
 //Valid for patch object:any = {}
 interface IKeyValue {

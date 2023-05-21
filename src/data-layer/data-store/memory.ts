@@ -1,5 +1,5 @@
+import { ItemFile } from "../dao/generic";
 import { DatastoreCustom } from "./interfaces";
-import { ItemFile } from '../dto/item-file.dto';
 
 export class MemoryDatastore implements DatastoreCustom{
 
