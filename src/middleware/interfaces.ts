@@ -23,7 +23,16 @@ export interface IFileUpload {
     path: string,
 }
 
+export interface IPayload {
+    file:unknown,
+    profile?:unknown
+}
+export interface IProfileUser {
+    id:string,
+    roles:string[],
+}
+
 export interface CustomRequestPayload extends Request {
-    payload?: unknown,
-    count?: number
+    payload?: IPayload,
+    //count?: number
 }

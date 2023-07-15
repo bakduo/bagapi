@@ -38,8 +38,8 @@ export class ItemFileMongo implements IGenericDB<ItemFile>{
         const allItems = await this.model.find();
         if (allItems){
             return allItems.map((item)=> {
-                const {uuid,name,created,path,modify,deleted,owner,timestamp} = item;
-                return {uuid,name,created,path,modify,deleted,owner,timestamp};
+                const {uuid,name,created,path,modify,deleted,owner,timestamp,sizeof} = item;
+                return {uuid,name,created,path,modify,deleted,owner,timestamp,sizeof};
             });
         }
 
@@ -60,9 +60,9 @@ export class ItemFileMongo implements IGenericDB<ItemFile>{
 
         const item = await this.model.findOne(queryObj);
         if (item){
-            const {uuid,name,created,path,modify,deleted,owner,timestamp} = item;
+            const {uuid,name,created,path,modify,deleted,owner,timestamp,sizeof} = item;
 
-            return {uuid,name,created,path,modify,deleted,owner,timestamp};
+            return {uuid,name,created,path,modify,deleted,owner,timestamp,sizeof};
         }
 
         throw new Error(`Not found into MongoDB`);
@@ -99,9 +99,9 @@ export class ItemFileMongo implements IGenericDB<ItemFile>{
             const newItem:ItemFile = await this.model.create(item);
             if (newItem){
                
-               const {uuid,name,created,path,modify,deleted,owner,timestamp} = newItem;
+               const {uuid,name,created,path,modify,deleted,owner,timestamp,sizeof} = newItem;
 
-               return {uuid,name,created,path,modify,deleted,owner,timestamp};
+               return {uuid,name,created,path,modify,deleted,owner,timestamp,sizeof};
 
             }    
             
@@ -122,9 +122,9 @@ export class ItemFileMongo implements IGenericDB<ItemFile>{
         const updateItem = await this.model.findOneAndUpdate({uuid:id},item,{ returnOriginal: false });
             
         if (updateItem){
-            const {uuid,name,created,path,modify,deleted,owner,timestamp} = updateItem;
+            const {uuid,name,created,path,modify,deleted,owner,timestamp,sizeof} = updateItem;
 
-            return {uuid,name,created,path,modify,deleted,owner,timestamp};
+            return {uuid,name,created,path,modify,deleted,owner,timestamp,sizeof};
         }
 
         throw new Error(`Not found into MongoDB`);

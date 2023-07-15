@@ -29,4 +29,5 @@ export interface ItemFile {
     uuid?:string;
     _id?:string;
     timestamp:number;
+    sizeof:number;
 }

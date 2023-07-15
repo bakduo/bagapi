@@ -1,2 +1,4 @@
-export * from './dao/index';
-export * from './data-store/index';
+export * from './dao';
+export * from './data-store';
+export * from './factory';
+export * from './schemas'

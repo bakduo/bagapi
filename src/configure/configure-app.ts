@@ -5,6 +5,7 @@ import stream from 'stream';
 import childProcess from 'child_process';
 
 import pino from "pino";
+import { MQservice } from '../service-layer/messages';
 
 export interface IConfigDB {
     db:{
@@ -45,10 +46,18 @@ export interface IConfigDB {
             }
         }
     },
+    upload:{
+        enable:boolean,
+        path:string,
+    },
     service:{
         storage:{
             server:string,
-        }
+        },
+        auth:{
+            server:string,
+        },
+        enable_service_token:boolean
     },
     jwt:{
         secretRefresh:string;
@@ -76,8 +85,27 @@ export interface IConfigDB {
                 port:number;
             }
         }
+    },
+    message:{
+        enable:boolean,
+        rabbitmq:boolean,
+        server:string,
+        port:number,
+        vhost:string,
+        username:string,
+        password:string,
+        exchname:string,
+        queuename:string,
+        routerkey:string,
     }
 
+}
+
+export interface tokenResponse {
+    profile:{
+        id: string,
+        roles: Array<string>,
+    }
 }
 
 const logThrough = new stream.PassThrough();
@@ -140,6 +168,16 @@ export const ERRORS_APP = {
         code: 1005,
         HttpStatusCode: 404
     },
+    'EMiddlewareCheckFileItem':{
+        detail:'Exception on find file user',
+        code: 1006,
+        HttpStatusCode: 404
+    },
+    'EControllerFailTransfer':{
+        detail:'Exception on transfer file user',
+        code: 1007,
+        HttpStatusCode: 500
+    },
     'EBase':{
         detail:'Exception generic',
         code: 1000,
@@ -147,5 +185,12 @@ export const ERRORS_APP = {
     },
 }
 
-
 export const appconfig:IConfigDB = config.get('app');
+
+
+export const loadMessageBroker = async () =>{
+    const mqs = MQservice.getInstance(appconfig.message.queuename,appconfig.message.exchname,appconfig.message.routerkey);
+    await mqs.connect(appconfig.message.server,appconfig.message.port,appconfig.message.vhost,appconfig.message.username,appconfig.message.password);
+    await mqs.getChannel();
+    await mqs.configureChannel();
+}

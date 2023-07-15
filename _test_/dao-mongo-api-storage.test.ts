@@ -31,7 +31,7 @@ describe('Test DAO Mongo UNIT',async () => {
 
         it('SAVE ITEM DAO', async () => {
             
-            const item1 = {name:faker.hacker.adjective(),created:new Date(),path:faker.hacker.adjective(),modify:new Date(),deleted:false,owner:faker.internet.userName(),uuid:uuid1,timestamp:Math.floor(Date.now() / 1000)};
+            const item1 = {name:faker.hacker.adjective(),created:new Date(),path:faker.hacker.adjective(),modify:new Date(),deleted:false,owner:faker.internet.userName(),uuid:uuid1,timestamp:Math.floor(Date.now() / 1000),sizeof:0};
             
             const saved = await dao.saveOne(item1);
 
@@ -49,7 +49,7 @@ describe('Test DAO Mongo UNIT',async () => {
 
         it('SAVE ITEM 2 DAO', async () => {
             
-            const item1 = {name:faker.hacker.adjective(),created:new Date(),path:faker.hacker.adjective(),modify:new Date(),deleted:false,owner:faker.internet.userName(),uuid:uuid2,timestamp:Math.floor(Date.now() / 1000)};
+            const item1 = {name:faker.hacker.adjective(),created:new Date(),path:faker.hacker.adjective(),modify:new Date(),deleted:false,owner:faker.internet.userName(),uuid:uuid2,timestamp:Math.floor(Date.now() / 1000),sizeof:0};
             
             const saved = await dao.saveOne(item1);
 
@@ -65,7 +65,7 @@ describe('Test DAO Mongo UNIT',async () => {
 
         it('SAVE ITEM 3 DAO', async () => {
             
-            const item1 = {name:faker.hacker.adjective(),created:new Date(),path:faker.hacker.adjective(),modify:new Date(),deleted:false,owner:faker.internet.userName(),uuid:uuid3,timestamp:Math.floor(Date.now() / 1000)};
+            const item1 = {name:faker.hacker.adjective(),created:new Date(),path:faker.hacker.adjective(),modify:new Date(),deleted:false,owner:faker.internet.userName(),uuid:uuid3,timestamp:Math.floor(Date.now() / 1000),sizeof:0};
             
             const saved = await dao.saveOne(item1);
 
@@ -117,7 +117,7 @@ describe('Test DAO Mongo UNIT',async () => {
 
         it('UPDATEONE ITEM DAO', async () => {
 
-            const itemNew = {name:faker.hacker.adjective(),created:new Date(),path:faker.hacker.adjective(),modify:new Date(),deleted:false,owner:faker.internet.userName(),uuid:uuid2,timestamp:Math.floor(Date.now() / 1000)};
+            const itemNew = {name:faker.hacker.adjective(),created:new Date(),path:faker.hacker.adjective(),modify:new Date(),deleted:false,owner:faker.internet.userName(),uuid:uuid2,timestamp:Math.floor(Date.now() / 1000),sizeof:0};
             
             const itemUpdated = await dao.updateOne(uuid2,itemNew);
 
@@ -137,7 +137,7 @@ describe('Test DAO Mongo UNIT',async () => {
 
         it('UPDATEONE ITEM DAO DONT Exist', async () => {
 
-            const itemNew = {name:faker.hacker.adjective(),created:new Date(),path:faker.hacker.adjective(),modify:new Date(),deleted:false,owner:faker.internet.userName(),uuid:'434343',timestamp:Math.floor(Date.now() / 1000)};
+            const itemNew = {name:faker.hacker.adjective(),created:new Date(),path:faker.hacker.adjective(),modify:new Date(),deleted:false,owner:faker.internet.userName(),uuid:'434343',timestamp:Math.floor(Date.now() / 1000),sizeof:0};
             
             try {
                 await dao.updateOne('434343',itemNew);

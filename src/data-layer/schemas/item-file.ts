@@ -41,4 +41,9 @@ export const ItemFileSchema = new Schema<ItemFile>({
         required: true,
         default: Math.floor(Date.now() / 1000),
       },
+    sizeof:{
+      type: Number,
+      required: true,
+      default:0
+    }
   });

@@ -34,7 +34,6 @@ describe('Test controller UNIT',async () => {
 
         console.log("###############BEGIN TEST Controller#################");
 
-    
         const tmpJson = [
             {name:'name1',
             service:'service1',
@@ -48,7 +47,7 @@ describe('Test controller UNIT',async () => {
         ];
 
         console.log(`Buffer default max: ${buffer.constants.MAX_LENGTH}` )
-        
+
         fs.writeFileSync(`${filePath}/${nameFile1}`,JSON.stringify(tmpJson),'utf8');
 
         //streamFile1 = new Uint8Array(fs.readFileSync(`${filePath}/sample.json`));
@@ -67,32 +66,32 @@ describe('Test controller UNIT',async () => {
         it('debería generar un file con los datos del user en formato stream data text', async () => {
 
             const tokenUser = faker.string.alphanumeric(100);
-    
+
             const readStream = fs.createReadStream(`${filePath}/${nameFile1}`);
-    
+
             const sizeOFile  = fs.statSync(`${filePath}/${nameFile1}`).size;
-    
+
             let chunks:Array<Buffer|string> = [];
-    
+
             readStream.on('data', chunk => {
                 chunks = chunks.concat(chunk);
                 console.log(`Received ${chunk.length} bytes of data.`);
             });
-    
+
             readStream.on('finish', () => {
                 console.log('All the data is transmitted');
             });
-    
+
             readStream.on('error', (error) => console.log(error.message));
-    
-            readStream.on('end', async () => {          
-                console.log('### read stream end event  => DONE ###');    
+
+            readStream.on('end', async () => {
+                console.log('### read stream end event  => DONE ###');
             });
-            
+
             for await (const chunk of readStream) {
                 console.log(`>>> ${chunk.length}`);
             }
-    
+
             const dataArray = chunks as Uint8Array[];
             const data = Buffer.concat(dataArray);
             const response = await requestTest.post('/api/save').send(data)
@@ -118,36 +117,36 @@ describe('Test controller UNIT',async () => {
     });
 
     describe('Operations commons for content user api with stream data image', () => {
-        
+
         it('debería generar un file con los datos del user en formato stream data image', async () => {
 
             const tokenUser = faker.string.alphanumeric(100);
-    
+
             const readStream = fs.createReadStream(`${filePath}/${nameFile2}`);
-    
+
             const sizeOFile  = fs.statSync(`${filePath}/${nameFile2}`).size;
-    
+
             let chunks:Array<Buffer|string> = [];
-    
+
             readStream.on('data', chunk => {
                 chunks = chunks.concat(chunk);
                 console.log(`Received ${chunk.length} bytes of data.`);
             });
-    
+
             readStream.on('finish', () => {
                 console.log('All the data is transmitted');
             });
-    
+
             readStream.on('error', (error) => console.log(error.message));
-    
-            readStream.on('end', async () => {          
-                console.log('### read stream end event  => DONE ###');    
+
+            readStream.on('end', async () => {
+                console.log('### read stream end event  => DONE ###');
             });
-            
+
             for await (const chunk of readStream) {
                 console.log(`>>> ${chunk.length}`);
             }
-    
+
             const dataArray = chunks as Uint8Array[];
             const data = Buffer.concat(dataArray);
             const response = await requestTest.post('/api/save').send(data)
@@ -160,7 +159,6 @@ describe('Test controller UNIT',async () => {
             .set('Authorization',`Bearer ${tokenUser}`)
             expect(response.status).to.eql(201);
             const responseUser = response.body;
-            console.log(responseUser.file);
             expect(responseUser).to.be.a('object');
             expect(responseUser).to.include.keys('message');
             expect(responseUser).to.include.keys('file');
@@ -170,13 +168,14 @@ describe('Test controller UNIT',async () => {
             expect(responseUser.file.count).to.equal(sizeOFile);
             expect(responseUser.file.name).to.equal(nameFile2);
             console.log('### DONE ###');
-    
+
         });
     });
 
     describe('Operations commons for content user api with stream data', () => {
 
         it('debería generar un file con los datos del user en formato stream data', async () => {
+
 
             const tokenUser = faker.string.alphanumeric(100);
 
@@ -226,7 +225,7 @@ describe('Test controller UNIT',async () => {
             // }
 
             // console.log('### DONE ###');
-            
+
             // const readStream = new Uint8Array(fs.readFileSync(`${filePath}/${nameFile3}`));
 
             // const formData = {
@@ -254,7 +253,7 @@ describe('Test controller UNIT',async () => {
             // expect(responseUser.file.save).to.equal(nameFile3);
 
             let chunks:Array<Buffer|string> = [];
-            
+
             // readStream.on('open', ()=> console.log(`Openfile ${nameFile3}`));
 
             readStream.on('data', chunk => {
@@ -273,10 +272,10 @@ describe('Test controller UNIT',async () => {
             readStream.on('end', async () => {
                 //const dataArray = chunks as Uint8Array[];
                 //const data = Buffer.concat(dataArray);
-                //Buffer.from(chunks[0]).toString('base64')          
-                console.log('### read stream end event  => DONE ###');    
+                //Buffer.from(chunks[0]).toString('base64')
+                console.log('### read stream end event  => DONE ###');
             });
-            
+
             for await (const chunk of readStream) {
                 console.log(`>>> ${chunk.length}`);
             }
@@ -313,7 +312,7 @@ describe('Test controller UNIT',async () => {
     //         const readStream = fs.createReadStream(`${filePath}/${nameFile3}`);
 
     //         const chunks:Array<Buffer|string> = [];
-            
+
     //         readStream.on('data', chunk => chunks.push(chunk));
 
     //         readStream.on('finish', () => {
@@ -341,8 +340,8 @@ describe('Test controller UNIT',async () => {
     //             expect(responseUser.file).to.be.a('object');
     //             expect(responseUser.file).to.include.keys('save');
     //             expect(responseUser.file.save).to.equal("noexiste");
-                
-    //         }); 
+
+    //         });
 
     //     });
     // })
@@ -369,10 +368,10 @@ describe('Test controller UNIT',async () => {
             expect(responseDeleteBody.file).to.include.keys('deleted');
             expect(responseDeleteBody.file.deleted).to.equal(item.uuid);
             console.log('### DONE ###');
-    
+
         });
-        
-        it('debería eliminar un file', async () => {
+
+        it('debería fallar para eliminar un file', async () => {
 
             const tokenUser = faker.string.alphanumeric(100);
 
@@ -388,17 +387,13 @@ describe('Test controller UNIT',async () => {
             const responseUser = response.body;
             expect(responseUser).to.be.a('object');
             expect(responseUser).to.include.keys('message');
-            // expect(responseUser).to.include.keys('file');
-            // expect(responseUser.file).to.be.a('object');
-            // expect(responseUser.file).to.include.keys('deleted');
-            // expect(responseUser.file.deleted).to.equal(nameFile2);
             console.log('### DONE ###');
-    
+
         });
     });
 
     describe('Operations get all files list', () => {
-        
+
         it('debería listar todos los files en la DB', async () => {
 
             const tokenUser = faker.string.alphanumeric(100);
@@ -411,44 +406,121 @@ describe('Test controller UNIT',async () => {
             expect(responseUser).to.include.keys('files');
             expect(responseUser.files).to.be.a('array');
             console.log('### DONE ###');
-    
+
         });
 
     });
 
     describe('Operations find file', () => {
-        
-        it('debería buscar un file by name', async () => {
-
-            const tokenUser = faker.string.alphanumeric(100);
-            const response = await requestTest.get(`/api/findByName/${nameFile1}`).send()
-            .set('Authorization',`Bearer ${tokenUser}`)
-            expect(response.status).to.eql(200);
-            const responseUser = response.body;
-            expect(responseUser).to.be.a('object');
-            expect(responseUser).to.include.keys('message');
-            expect(responseUser).to.include.keys('file');
-            expect(responseUser.file).to.be.a('object');
-            expect(responseUser.file).to.include.keys('name');
-            expect(responseUser.file.name).to.equal(nameFile1);
-            console.log('### DONE ###');
-    
-        });
 
         it('debería buscar un file by uuid y fallar', async () => {
 
             const uuid= faker.string.alphanumeric(100);
             const tokenUser = faker.string.alphanumeric(100);
             const response = await requestTest.get(`/api/findById/${uuid}`).send()
-            .set('Authorization',`Bearer ${tokenUser}`)            
+            .set('Authorization',`Bearer ${tokenUser}`)
             expect(response.status).to.eql(404);
             const responseUser = response.body;
             expect(responseUser).to.be.a('object');
             expect(responseUser).to.include.keys('message');
             console.log('### DONE ###');
-    
+
+        });
+
+        it('debería buscar un file by uuid y retornar el archivo', async () => {
+
+            //Buscar archivo que existe
+            console.log("#############GET FILE BY ID################");
+            const tokenUser = faker.string.alphanumeric(100);
+            const responseFile = await requestTest.get('/api/list').send()
+            const responseUserFile = responseFile.body;
+            const item = responseUserFile.files[1];
+
+            const sizeOFile  = fs.statSync(`${uploadPath}/${item.name}`);
+
+            const stream = fs.createWriteStream(`/tmp/${item.name}`);
+
+            stream.on('open', () => {
+                requestTest.get(`/api/file/${item.uuid}`).send()
+            .set('Authorization',`Bearer ${tokenUser}`).pipe(stream);
+            });
+
+            stream.on('close', () => {
+                const sizeOFile2  = fs.statSync(`/tmp/${item.name}`).size;
+                expect(sizeOFile2).to.eql(sizeOFile.size);
+                fs.unlinkSync(`/tmp/${item.name}`);
+            });
+
+            stream.on('error', err => {
+                console.error(err);
+            });
+
+            console.log("#############DONE GET FILE BY ID################");
         });
     });
+
+
+    describe('Operations update file', () => {
+
+        it('debería actualizar archivo', async () => {
+
+            console.log("#############UPDATE FILE BY ID################");
+
+            const tokenUser = faker.string.alphanumeric(100);
+
+            const readStream = fs.createReadStream(`${filePath}/${nameFile2}`);
+
+            const sizeOFile  = fs.statSync(`${filePath}/${nameFile2}`).size;
+
+            let chunks:Array<Buffer|string> = [];
+
+            readStream.on('data', chunk => {
+                chunks = chunks.concat(chunk);
+                console.log(`Received ${chunk.length} bytes of data.`);
+            });
+
+            readStream.on('finish', () => {
+                console.log('All the data is transmitted');
+            });
+
+            readStream.on('error', (error) => console.log(error.message));
+
+            readStream.on('end', async () => {
+                console.log('### read stream end event  => DONE ###');
+            });
+
+            for await (const chunk of readStream) {
+                console.log(`>>> ${chunk.length}`);
+            }
+
+            const dataArray = chunks as Uint8Array[];
+
+            const data = Buffer.concat(dataArray);
+
+            const responseList = await requestTest.get('/api/list').send()
+            const responseUserData = responseList.body;
+            const item = responseUserData.files[1];
+
+            const response = await requestTest.put(`/api/update/${item.uuid}`).send(data)
+            //MIME RFC 2046
+            .set('Content-Type','application/octet-stream')
+            //https://jsonapi.org/
+            .set('Accept','application/vnd.api+json',)
+            //.set('Content-Length',`${sizeOFile}`)
+            .set('Content-Disposition',`file; filename="${nameFile2}"`)
+            .set('Authorization',`Bearer ${tokenUser}`)
+            expect(response.status).to.eql(201);
+            const responseUser = response.body;
+            expect(responseUser).to.be.a('object');
+            expect(responseUser).to.include.keys('message');
+            expect(responseUser).to.include.keys('file');
+            expect(responseUser.file).to.include.keys('count');
+            expect(responseUser.file.count).to.equal(sizeOFile);
+            expect(responseUser.file.name).to.equal(nameFile2);
+            console.log("#############DONE UPDATE FILE BY ID################");
+
+
+        });
+
+    });
 })
-
-

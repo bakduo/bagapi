@@ -3,48 +3,37 @@ import * as fs from 'fs';
 import {Response, NextFunction} from 'express';
 import { extractNameFileFromHeader } from '../util/regex';
 import { CustomRequestPayload } from './interfaces';
+import { DaoFactory } from '../data-layer/factory/provider';
+import { ERRORS_APP, appconfig, loggerApp } from '../configure';
+import { EMiddleware, errorGenericType } from '../service-layer/util';
 
 const cwd = process.cwd();
 
 const pathUpload = cwd + '/upload';
 
-
 const uploadFile = (req:CustomRequestPayload, filePath:string) => {
-    //console.log(req.headers);
+    
     const nameFile = extractNameFileFromHeader(req.headers['content-disposition']||'');
-    //const nameFile = form.filename.options.name;
-    //let bytes = 0;
-    req.count = 0;
-    //console.log(nameFile);
     return new Promise((resolve, reject) => {
 
     //https://dev.to/tqbit/how-to-use-node-js-streams-for-fileupload-4m1n
      const stream = fs.createWriteStream(`${filePath}/${nameFile}`);
-     // With the open - event, data will start being written
-     // from the request to the stream's destination path
+    
      stream.on('open', () => {
-      //console.log('Stream open ...  0.00%');
       req.pipe(stream);
      });
+
+    //  stream.on('drain', () => {
+    //   const written = Number(stream.bytesWritten);
+    //   const total = Number(req.headers['content-length']);
+    //   const pWritten = ((written / total) * 100).toFixed(2);
+    //  });
    
-     // Drain is fired whenever a data chunk is written.
-     // When that happens, print how much data has been written yet.
-     stream.on('drain', () => {
-      const written = Number(stream.bytesWritten);
-      const total = Number(req.headers['content-length']);
-      const pWritten = ((written / total) * 100).toFixed(2);
-      //req.count = total;
-      //console.log(`Processing  ...  ${pWritten}% done ${nameFile}`);
-     });
-   
-     // When the stream is finished, print a final message
-     // Also, resolve the location of the file to calling function
      stream.on('close', () => {
-      //console.log(`Processing  ...  100% ${nameFile}`);
-      req.count = Number(req.headers['content-length']);
-      resolve({name:nameFile,type:'stream',count:req.count,path:pathUpload});
+      const cantBytes = Number(req.headers['content-length']);
+      resolve({name:nameFile,type:'stream',count:cantBytes,path:pathUpload});
      });
-      // If something goes wrong, reject the primise
+     
      stream.on('error', err => {
       console.error(err);
       reject(err);
@@ -57,12 +46,37 @@ const uploadFile = (req:CustomRequestPayload, filePath:string) => {
 export const checkUpload = async(req:CustomRequestPayload, res:Response, next:NextFunction) => {
  
     if (req.body){
-        //const {filename} = req.body;
-        uploadFile(req,pathUpload)
-        .then((data)=>{
-            req.payload=data;
-            return next()
-        })
-        .catch((err)=>{return res.status(400).json({message:`Fail to upload streams for user ${err}`})});
+        if (req.params.uuid){
+            try{
+                const dao = new DaoFactory().getDatabase(appconfig.db.type);
+                const item = await dao.findOne({keycustom:'uuid',valuecustom:req.params.uuid});
+                if (item){
+                    uploadFile(req,pathUpload)
+                    .then((data)=>{
+                        if (req.payload){
+                         req.payload.file=data
+                        }
+                        return next()
+                    })
+                    .catch((err)=>{return res.status(400).json({message:`Fail to upload streams for user ${err}`})});
+                }else{
+                    return res.status(400).json({message:`Fail to upload streams for user ${req.params.uuid}`})
+                }
+            }catch (error) {
+                const err = error as errorGenericType;        
+                loggerApp.error(`Exception update item to db: ${err.message}`);
+                return next(new EMiddleware(`Message: ${err.message}`,ERRORS_APP.EMiddlewareCheckFileItem.code,ERRORS_APP.EMiddlewareCheckFileItem.HttpStatusCode)); 
+            }
+        }else{
+            //Caso base
+            uploadFile(req,pathUpload)
+                    .then((data)=>{
+                        if (req.payload){
+                            req.payload.file=data
+                        }
+                        return next()
+            })
+            .catch((err)=>{return res.status(400).json({message:`Fail to upload streams for user ${err}`})});
+        }   
     }
 }
